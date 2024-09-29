@@ -2,23 +2,23 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build', '-t',
-      'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch:$COMMIT_SHA',
+      'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch/cloud-run-samples:$COMMIT_SHA',
       '-t',
-      'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch:latest',
+      'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch/cloud-run-samples:latest',
       '.'
     ]
   - name: 'gcr.io/cloud-builders/docker'
     args: [
-      'push', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch:$COMMIT_SHA'
+      'push', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch/cloud-run-samples:$COMMIT_SHA'
     ]
   - name: 'gcr.io/cloud-builders/docker'
     args: [
-      'push', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch:latest'
+      'push', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch/cloud-run-samples:latest'
     ]
 
 images:
-  - 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch:$COMMIT_SHA'
-  - 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch:latest'
+  - 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch/cloud-run-samples:$COMMIT_SHA'
+  - 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/rss-batch/cloud-run-samples:latest'
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
