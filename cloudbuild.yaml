@@ -1,0 +1,24 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build', '-t',
+      'asia-northeast1-docker.pkg.dev/$PROJECT_ID/my-repo2/cloud-run-samples:$COMMIT_SHA',
+      '-t',
+      'asia-northeast1-docker.pkg.dev/$PROJECT_ID/my-repo2/cloud-run-samples:latest',
+      '.'
+    ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/my-repo2/cloud-run-samples:$COMMIT_SHA'
+    ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/my-repo2/cloud-run-samples:latest'
+    ]
+
+images:
+  - 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/my-repo2/cloud-run-samples:$COMMIT_SHA'
+  - 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/my-repo2/cloud-run-samples:latest'
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET

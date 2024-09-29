@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
+}
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model feeds {
+  id           Int         @id @default(autoincrement())
+  url          String
+  title        String?
+  description  String?
+  last_updated DateTime?
+  entries      entries[]
+  my_feeds     my_feeds[]
+  trend_feeds     trend_feeds[]
+  media_id     Int?        // メディアIDの外部キー
+  media        media?      @relation(fields: [media_id], references: [id])
+}
+
+model entries {
+  id          Int         @id @default(autoincrement())
+  feed_id     Int
+  title       String
+  link        String
+  content     String
+  published_at DateTime
+  created_at  DateTime    @default(now())
+  feed        feeds       @relation(fields: [feed_id], references: [id])
+  read_entries read_entries[]
+}
+
+model read_entries {
+  id          Int         @id @default(autoincrement())
+  entry_id    Int
+  read_at     DateTime    @default(now())
+  entry       entries     @relation(fields: [entry_id], references: [id])
+}
+
+model my_feeds_folders {
+  id          Int         @id @default(autoincrement())
+  name        String
+  created_at  DateTime    @default(now())
+  my_feeds    my_feeds[]
+}
+
+model my_feeds {
+  id          Int         @id @default(autoincrement())
+  folder_id   Int
+  feed_id     Int
+  added_at    DateTime    @default(now())
+  folder      my_feeds_folders @relation(fields: [folder_id], references: [id])
+  feed        feeds       @relation(fields: [feed_id], references: [id])
+}
+
+model trend_feeds {
+  id          Int         @id @default(autoincrement())
+  feed_id     Int
+  added_at    DateTime    @default(now())
+  feed        feeds       @relation(fields: [feed_id], references: [id])
+}
+
+model media {
+  id                   Int     @id @default(autoincrement())
+  hostname             String  @unique
+  feed_title_selector  String
+  feed_desc_selector   String 
+  feed_last_updated_selector String @default("updated")
+  item_selector        String  
+  item_title_selector  String
+  item_link_selector   String
+  item_desc_selector   String
+  item_pubdate_selector String
+  feeds                feeds[]
+}
