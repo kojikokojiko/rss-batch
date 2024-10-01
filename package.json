@@ -28,6 +28,7 @@
     "description": "",
     "devDependencies": {
         "@types/jsdom": "^21.1.7",
-        "@types/node-fetch": "^2.6.11"
+        "@types/node-fetch": "^2.6.11",
+        "prisma": "^5.20.0"
     }
 }

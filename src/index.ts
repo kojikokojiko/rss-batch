@@ -64,6 +64,11 @@ const fetchRSSFeed = async () => {
       items,
     };
 
+
+
+
+    
+
     console.log(JSON.stringify(feed, null, 2));
   } catch (error) {
     console.error('Error: ', error instanceof Error ? error.message : String(error));
