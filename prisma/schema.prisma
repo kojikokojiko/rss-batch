@@ -32,8 +32,10 @@ model entries {
   id          Int         @id @default(autoincrement())
   feed_id     Int
   title       String
-  link        String
-  content     String
+  link        String      @unique
+  description String?  
+  content     String?
+  image_url   String?
   published_at DateTime
   created_at  DateTime    @default(now())
   feed        feeds       @relation(fields: [feed_id], references: [id])

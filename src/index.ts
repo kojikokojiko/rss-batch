@@ -64,10 +64,23 @@ const fetchRSSFeed = async () => {
       items,
     };
 
+    // Prepare data for bulk insert
+    const entriesToCreate = items.map(item => ({
+      feed_id: 14,
+      title: item.title,
+      link: item.link,
+      description: item.description,
+      content: item.description, // Using description as content
+      image_url: item.ogImage,
+      published_at: new Date(item.pubDate),
+    }));
 
+    // Bulk insert entries
+    await prisma.entries.createMany({
+      data: entriesToCreate,
+      skipDuplicates: true, // This will skip entries with duplicate 'link' values
+    });
 
-
-    
 
     console.log(JSON.stringify(feed, null, 2));
   } catch (error) {
