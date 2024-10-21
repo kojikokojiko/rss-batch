@@ -26,9 +26,7 @@ const fetchOGPData = async (url: string): Promise<OGPData> => {
   }
 };
 
-const fetchRSSFeed = async () => {
-  const feedUrl = 'https://zenn.dev/zenn/feed';
-
+const fetchRSSFeed = async (feedId: number,feedUrl: string) => {
   try {
     const hostname = new URL(feedUrl).hostname;
     const media = await prisma.media.findUnique({ where: { hostname: hostname } });
@@ -66,7 +64,7 @@ const fetchRSSFeed = async () => {
 
     // Prepare data for bulk insert
     const entriesToCreate = items.map(item => ({
-      feed_id: 14,
+      feed_id: feedId,
       title: item.title,
       link: item.link,
       description: item.description,
@@ -81,7 +79,6 @@ const fetchRSSFeed = async () => {
       skipDuplicates: true, // This will skip entries with duplicate 'link' values
     });
 
-
     console.log(JSON.stringify(feed, null, 2));
   } catch (error) {
     console.error('Error: ', error instanceof Error ? error.message : String(error));
@@ -90,4 +87,27 @@ const fetchRSSFeed = async () => {
   }
 };
 
-fetchRSSFeed();
+
+const main = async () => {
+  try {
+    // Get only id and URL from feeds
+    const feeds = await prisma.feeds.findMany({
+      select: { id: true, url: true },
+    });
+    
+    // Process each feed
+    for (const feed of feeds) {
+      if (feed.url) { // Ensure URL is not null or undefined
+        await fetchRSSFeed(feed.id, feed.url);
+      }
+    }  
+  } catch (error) {
+    console.error('Error fetching feeds: ', error instanceof Error ? error.message : String(error));
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+
+
+main();
