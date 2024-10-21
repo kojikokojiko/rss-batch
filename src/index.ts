@@ -97,6 +97,7 @@ const main = async () => {
     
     // Process each feed
     for (const feed of feeds) {
+      console.log(`Fetching feed ${feed.id}...`);
       if (feed.url) { // Ensure URL is not null or undefined
         await fetchRSSFeed(feed.id, feed.url);
       }
